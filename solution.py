@@ -1,35 +1,95 @@
-### welcome_assignment_answers
-### Input - All eight questions given in the assignment.
-### Output - The right answer for the specific question
+# import socket module
 
-def welcome_assignment_answers(question):
-    #The student doesn't have to follow the skeleton for this assignment.
-    #Another way to implement is using a "case" statements similar to C.
-    if question == "In Slack, what is the secret passphrase posted in the #cyberfellows-computernetworking-fall2021 channel posted by a TA?":
-        answer = "mTLS"
-    elif question == "Are encoding and encryption the same? - Yes/No":
-        answer = "No"
-    elif question == "Is it possible to decrypt a message without a key? - Yes/No":
-        answer = "No"
-    elif question == "Is it possible to decode a message without a key? - Yes/No":
-        answer = "Yes"
-    elif question == "Is a hashed message supposed to be un-hashed? - Yes/No":
-        answer = "No"
-    elif question == "What is the MD5 hashing value to the following message: 'NYU Computer Networking' - Use MD5 hash generator and use the answer in your code":
-        answer = "42b76fe51778764973077a5a94056724"
-    elif question == "Is MD5 a secured hashing algorithm? - Yes/No":
-        answer = "No"
-    elif question == "What layer from the TCP/IP model the protocol DHCP belongs to? - The answer should be a numeric numbe":
-        answer = 5
-    elif question == "What layer of the TCP/IP model the protocol TCP belongs to? - The answer should be a numeric number":
-        answer = 4
-    else:
-        answer = 5
-    return (answer)
-# Complete all the questions.
+from socket import *
 
+import sys
 
-if __name__ == "__main__":
-    #use this space to debug and verify that the program works
-    debug_question = "Are encoding and encryption the same? - Yes/No"
-    print(welcome_assignment_answers(debug_question))
+serverPort = 13331
+
+serverSocket = socket(AF_INET, SOCK_STREAM)
+
+print("Socket Created!!")
+
+try:
+
+    # Prepare a sever socket
+
+    # Fill in start
+
+    serverSocket.bind(('', serverPort))
+
+    serverSocket.listen(1)
+
+    print('The server is ready to server:', serverPort)
+
+    # Fill in end
+
+except error as msg:
+
+    print("Bind failed. Error Code: " + str(msg[0]) + "Message: " + msg[1])
+
+    sys.exit()
+
+print("Socket bind complete")
+
+# start listening on the socket
+
+# fill in start
+
+# fill in end
+
+print('Socket now listening')
+
+while True:
+
+    # Establish the connection
+
+    connectionSocket, addr = serverSocket.accept()
+
+    print('source address:' + str(addr))
+
+    try:
+
+        # Receive message from the socket
+
+        message = connectionSocket.recv(1024)
+
+        print(message, '::', message.split()[0], ':', message.split()[1])
+
+        # obtian the file name carried by the HTTP request message
+
+        filename = message.split()[1]
+
+        print(filename, '||', filename[1:])
+
+        f = open(filename[1:])
+
+        outputdata = f.read()
+
+        print(outputdata)
+
+        # Send one HTTP header line into socket
+
+        # Fill in start
+
+        connectionSocket.send('\nHTTP/1.1 200 OK\n\n')
+
+        # Send the content of the requested file to the client
+
+        connectionSocket.send(outputdata)
+
+        # Fill in end
+
+        connectionSocket.close()
+
+    except IOError:
+
+        # Send response message for file not found
+
+        # Fill in start
+
+        connectionSocket.send('\nHTTP/1.1 404 Not Found\n\n')
+
+        connectionSocket.send('\nHTTP/1.1 404 Not Found\n\n')
+
+serverSocket.close()
