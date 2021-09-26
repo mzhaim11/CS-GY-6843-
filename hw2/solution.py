@@ -1,95 +1,33 @@
-# import socket module
-
 from socket import *
-
+import socket
 import sys
-
-serverPort = 13331
-
-serverSocket = socket(AF_INET, SOCK_STREAM)
-
-print("Socket Created!!")
-
-try:
-
-    # Prepare a sever socket
-
-    # Fill in start
-
-    serverSocket.bind(('', serverPort))
-
+def webServer(port=13331):
+    serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    serverSocket.bind(("", port))
     serverSocket.listen(1)
-
-    print('The server is ready to server:', serverPort)
-
-    # Fill in end
-
-except error as msg:
-
-    print("Bind failed. Error Code: " + str(msg[0]) + "Message: " + msg[1])
-
+    while True:
+        print ('Ready to serve...')
+        connectionSocket, addr = serverSocket.accept()
+        try:
+            try:
+                message = connectionSocket.recv(1024)
+                print ('Message is: ', message)
+                filename = message.split()[1]
+                print ('File name is: ', filename)
+                f = open(helloworld.html[1:])
+                outputdata = f.read()
+                connectionSocket.send("HTTP/1.1 200 OK ")
+                for i in range(0, len(outputdata)):
+                    connectionSocket.send(outputdata[i].encode())
+                connectionSocket.send("\r\n".encode())
+                connectionSocket.close()
+            except IOError:
+                connectionSocket.send("HTTP/1.1 404 Not Found ")
+                connectionSocket.send("<html><head></head><body><h1>404 Not Found</h1></body></html> ")
+                connectionSocket.close()
+        except (ConnectionResetError, BrokenPipeError):
+            pass
+    serverSocket.close()
     sys.exit()
-
-print("Socket bind complete")
-
-# start listening on the socket
-
-# fill in start
-
-# fill in end
-
-print('Socket now listening')
-
-while True:
-
-    # Establish the connection
-
-    connectionSocket, addr = serverSocket.accept()
-
-    print('source address:' + str(addr))
-
-    try:
-
-        # Receive message from the socket
-
-        message = connectionSocket.recv(1024)
-
-        print(message, '::', message.split()[0], ':', message.split()[1])
-
-        # obtian the file name carried by the HTTP request message
-
-        filename = message.split()[1]
-
-        print(filename, '||', filename[1:])
-
-        f = open(filename[1:])
-
-        outputdata = f.read()
-
-        print(outputdata)
-
-        # Send one HTTP header line into socket
-
-        # Fill in start
-
-        connectionSocket.send('\nHTTP/1.1 200 OK\n\n')
-
-        # Send the content of the requested file to the client
-
-        connectionSocket.send(outputdata)
-
-        # Fill in end
-
-        connectionSocket.close()
-
-    except IOError:
-
-        # Send response message for file not found
-
-        # Fill in start
-
-        connectionSocket.send('\nHTTP/1.1 404 Not Found\n\n')
-
-        connectionSocket.send('\nHTTP/1.1 404 Not Found\n\n')
-
-serverSocket.close()
+if __name__ == "__main__":
+    webServer(13331)
