@@ -29,6 +29,5 @@ def webServer(port=13331):
             pass
     serverSocket.close()
     sys.exit()
->>>>>>> 6be1f650578d33442fafc76837bf0630a6044106
 if __name__ == "__main__":
     webServer(13331)
