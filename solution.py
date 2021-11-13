@@ -54,7 +54,7 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
             byte_in_double = struct.calcsize("!d")
             timeSent = struct.unpack("!d", recPacket[28: 28 + byte_in_double])[0]
             delay = (timeReceived - timeSent) * 1000
-            ttl = ord(struct.upack("!c",recPacket[8:9])[0].decode())
+            ttl = ord(struct.unpack("!c",recPacket[8:9])[0].decode())
             return (delay, ttl, byte_in_double)
 
         # Fetch the ICMP header from the IP packet
