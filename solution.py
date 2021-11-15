@@ -132,7 +132,7 @@ def ping(host, timeout=1):
     maximium = -1
     stdv = 0
     for i in range(0, 4):
-        time_start = datetime
+        time_start = datetime.datetime.now()
         delay = doOnePing(dest, timeout)
         time_stop = datetime.datetime.now()
         time_diff = time_stop - time_start
