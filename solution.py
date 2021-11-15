@@ -130,7 +130,7 @@ def ping(host, timeout=1):
     mean = 0
     minimium = 1000
     maximium = -1
-    stdev = 0
+    stdv = 0
     for i in range(0, 4):
         time_start = datetime.datetime.now()
         delay = doOnePing(dest, timeout)
@@ -153,7 +153,7 @@ def ping(host, timeout=1):
         dev=dev+((rtts[i]-mean)*(rtts[i]-mean))
         i+=1
     pstdev_var=math.sqrt(dev/4)
-    vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev_var), 2))]
+    vars = [float(round(packet_min, 2)), float(round(packet_avg, 2)), float(round(packet_max, 2)), float(round(pstdev_var, 2))]
     return vars
 
 if __name__ == '__main__':
