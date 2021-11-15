@@ -124,4 +124,3 @@ def ping(host, timeout=1):
 
 if __name__ == '__main__':
     ping("google.co.il")
-
