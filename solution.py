@@ -121,13 +121,16 @@ def ping(host, timeout=1):
     # Send ping requests to a server separated by approximately one second
     for i in range(0, 4):
         delay = doOnePing(dest, timeout)
-        #delay_float.append(delay))
+        delay_float.append(delay)
         print(delay)
         time.sleep(1)  # one second
-    #packet_min = min(delay_float)
-    # packet_max = max(delay_float)
-    # packet_avg = (sum(delay_float))/(len(delay_float))
-    # stdv_var= stdev(delay_float)
-    # vars = packet_min, packet_avg, packet_max, stdv_var
-    # print(vars)
+    packet_min = min(delay_float)
+    packet_max = max(delay_float)
+    packet_avg = (sum(delay_float))/(len(delay_float))
+    stdv_var= stdev(delay_float)
+    vars = packet_min, packet_avg, packet_max, stdv_var
+    print(vars)
     return vars
+
+if __name__ == '__main__':
+    ping("google.co.il")
