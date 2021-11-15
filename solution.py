@@ -153,7 +153,7 @@ def ping(host, timeout=1):
         dev=dev+((rtts[i]-mean)*(rtts[i]-mean))
         i+=1
     pstdev_var=math.sqrt(dev/4)
-    vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev)
+    vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev_var), 2))]
     return vars
 
 if __name__ == '__main__':
