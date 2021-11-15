@@ -1,4 +1,3 @@
-
 from socket import *
 import os
 import sys
@@ -6,6 +5,7 @@ import struct
 import time
 import select
 import binascii
+from statistics import *
 # Should use stdev
 
 ICMP_ECHO_REQUEST = 8
@@ -49,7 +49,13 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         recPacket, addr = mySocket.recvfrom(1024)
 
         # Fill in start
-
+        icmpHeader = recPacket[20:28]
+        icmType, code, myChecksum, packetID, sequence = struct.unpack("bbHHh",icmpHeader)
+        if icmType !=8 and packetID == ID:
+            bytesInDouble = str.calcsize("d")
+            timeSent = struct.unpack("d", recPacket[28:8 + bytesInDouble][0])
+            rtt = (timeReceived - timeSent) * 1000
+            return rtt
         # Fetch the ICMP header from the IP packet
 
         # Fill in end
