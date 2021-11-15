@@ -141,7 +141,7 @@ def ping(host, timeout=1):
         rtts.append(rtt)
         mean = mean +rtt
         maximium = max(maximium, rtt)
-        minimium = min(minimum, rtt)
+        minimium = min(minimium, rtt)
         print("Reply from", dest, ":", "bytes=", byte_in_double, "time=", delay[1], "TTL=", rtt,"ms")
     mean /=4
     packet_min=minimium
