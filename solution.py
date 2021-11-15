@@ -1,14 +1,20 @@
 from socket import *
-from array import *
 import os
 import sys
 import struct
 import time
 import select
 import binascii
+import math
 from statistics import *
+import datetime
 # Should use stdev
-
+packet_min = 0
+packet_avg = 0
+packet_max = 0
+pstdev_var=0
+packageRev=0
+packageSent=0
 ICMP_ECHO_REQUEST = 8
 
 
@@ -113,24 +119,41 @@ def doOnePing(destAddr, timeout):
 def ping(host, timeout=1):
     # timeout=1 means: If one second goes by without a reply from the server,  	# the client assumes that either the client's ping or the server's pong is lost
     dest = gethostbyname(host)
-    #print("Pinging " + dest + " using Python:")
+    print("Pinging " + dest + " using Python:")
+    byte_in_double = struct.calcsize("d")
     #print("")
-    delay_float = array('f')
+
     # Calculate vars values and return them
     #vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev_var), 2))]
     # Send ping requests to a server separated by approximately one second
+    rtts = []
+    mean = 0
+    minimium = 1000
+    maximium = -1
+    stdv = 0
     for i in range(0, 4):
+        time_start = datetime
         delay = doOnePing(dest, timeout)
-        delay_float.append(delay)
-        print(delay)
-        time.sleep(1)  # one second
-    packet_min = min(delay_float)
-    packet_max = max(delay_float)
-    packet_avg = (sum(delay_float))/(len(delay_float))
-    stdev_var= stdev(delay_float)
-    #vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev_var), 2))]
-    vars = packet_min, packet_avg, packet_max, stdv_var
-    print(vars)
+        time_stop = datetime.datetime.now()
+        time_diff = time_stop - time_start
+        rtt = time_diff.total_seconds()*1000
+        rtt = round(rtt,3)
+        rtts.apend(rtt)
+        mean = mean +rtt
+        maximium = max(maximium, rtt)
+        minimium = min(minimum, rtt)
+        print("Reply from", dest, ":", "bytes=", byte_in_double, "time=", delay[1], "TTL=", rtt,"ms")
+    mean /=4
+    packet_min=minimium
+    packet_max=maximium
+    packet_avg=mean
+    dev = 0
+    i=0
+    while i<4:
+        dev=dev+((rtts[i]-mean)*(rtts[i]-mean))
+        i+=1
+    pstdev_var=math.sqrt(dev/4)
+    vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev)
     return vars
 
 if __name__ == '__main__':
