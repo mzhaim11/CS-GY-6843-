@@ -1,13 +1,11 @@
+
 from socket import *
-from array import *
 import os
 import sys
 import struct
 import time
 import select
-from statistics import *
 import binascii
-
 # Should use stdev
 
 ICMP_ECHO_REQUEST = 8
@@ -36,6 +34,7 @@ def checksum(string):
     return answer
 
 
+
 def receiveOnePing(mySocket, ID, timeout, destAddr):
     timeLeft = timeout
 
@@ -50,14 +49,6 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         recPacket, addr = mySocket.recvfrom(1024)
 
         # Fill in start
-        icmpHeader = recPacket[20: 28]
-        icmpType, code, myChecksum, packetID, sequence = struct.unpack("!bbHHh", icmpHeader)
-        if icmpType != 8 and packetID == ID:
-            bytesInDouble = struct.calcsize("!d")
-            timeSent = struct.unpack("!d", recPacket[28: 28 + bytesInDouble])[0]
-            rtt = (timeReceived - timeSent) * 1000
-
-            return rtt
 
         # Fetch the ICMP header from the IP packet
 
@@ -86,17 +77,19 @@ def sendOnePing(mySocket, destAddr, ID):
     else:
         myChecksum = htons(myChecksum)
 
+
     header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
     packet = header + data
 
     mySocket.sendto(packet, (destAddr, 1))  # AF_INET address must be tuple, not str
 
+
     # Both LISTS and TUPLES consist of a number of objects
     # which can be referenced by their position number within the object.
 
-
 def doOnePing(destAddr, timeout):
     icmp = getprotobyname("icmp")
+
 
     # SOCK_RAW is a powerful socket type. For more details:   http://sockraw.org/papers/sock_raw
     mySocket = socket(AF_INET, SOCK_RAW, icmp)
@@ -111,26 +104,17 @@ def doOnePing(destAddr, timeout):
 def ping(host, timeout=1):
     # timeout=1 means: If one second goes by without a reply from the server,  	# the client assumes that either the client's ping or the server's pong is lost
     dest = gethostbyname(host)
-    # print("Pinging " + dest + " using Python:")
-    # print("")
+    print("Pinging " + dest + " using Python:")
+    print("")
     # Calculate vars values and return them
-    # vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev_var), 2))]
+    #  vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev_var), 2))]
     # Send ping requests to a server separated by approximately one second
-    delay_float = array('f')
-
-    for i in range(0, 4):
+    for i in range(0,4):
         delay = doOnePing(dest, timeout)
-        delay_float.append(delay)
         print(delay)
         time.sleep(1)  # one second
-    pack_min = min(delay_float)
-    pack_max = max(delay_float)
-    pack_avg = (sum(delay_float)) / (len(delay_float))
-    stdev_var = stdev(delay_float)
-    vars = pack_min, pack_avg, pack_max, stdev_var
-    print(vars)
-    return vars
 
+    return vars
 
 if __name__ == '__main__':
     ping("google.co.il")
