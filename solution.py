@@ -1,4 +1,5 @@
 from socket import *
+from array import *
 import os
 import sys
 import struct
@@ -49,7 +50,7 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         recPacket, addr = mySocket.recvfrom(1024)
 
         # Fill in start
-        header = recPacket[20:28]
+        header = recPacket[20: 28]
         type, code, checksum, packetID, sequence = struct.unpack("!bHHh", header)
         if type ==0 and packetID == ID:
             byte_in_double = struct.calcsize("!d")
@@ -112,16 +113,23 @@ def doOnePing(destAddr, timeout):
 def ping(host, timeout=1):
     # timeout=1 means: If one second goes by without a reply from the server,  	# the client assumes that either the client's ping or the server's pong is lost
     dest = gethostbyname(host)
-    print("Pinging " + dest + " using Python:")
-    print("")
+    #print("Pinging " + dest + " using Python:")
+    #print("")
+    delay_float = array ('f')
     # Calculate vars values and return them
     #  vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev_var), 2))]
     # Send ping requests to a server separated by approximately one second
     for i in range(0,4):
         delay = doOnePing(dest, timeout)
+        delay_float.append(delay)
         print(delay)
         time.sleep(1)  # one second
-
+    packet_min = min(delay_float)
+    packet_max = max(delay_float)
+    packet_avg = (sum(delay_float))/(len(delay_float))
+    stdv_var= stdev(delay_float)
+    vars = packet_min, packet_avg, packet_max, stdv_var
+    print(vars)
     return vars
 
 if __name__ == '__main__':
