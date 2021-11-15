@@ -138,7 +138,7 @@ def ping(host, timeout=1):
         time_diff = time_stop - time_start
         rtt = time_diff.total_seconds()*1000
         rtt = round(rtt,3)
-        rtts.apend(rtt)
+        rtts.append(rtt)
         mean = mean +rtt
         maximium = max(maximium, rtt)
         minimium = min(minimum, rtt)
