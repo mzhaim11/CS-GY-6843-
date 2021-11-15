@@ -54,7 +54,7 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         type, code, checksum, packetID, sequence = struct.unpack("!bHHh", header)
         if type ==0 and packetID == ID:
             byte_in_double = struct.calcsize("!d")
-            timeSent = struct.unpack("!d",recPacket[28:8 +byte_in_double])[0]
+            timeSent = struct.unpack("!d",recPacket[28:28 +byte_in_double])[0]
             delay   = (timeReceived - timeSent) * 1000
             ttl = ord(struct.unpack("!c", recPacket[8:9])[0].decode("ascii"))
             return (delay,ttl,byte_in_double)
